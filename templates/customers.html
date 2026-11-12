@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Directory – PayPilot AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Customer Management</h1>
+    <p class="page-subtitle">Client account profiles, historical transaction values, and quick invoice dispatch.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" id="btn-add-customer">
+      <i class="fa-solid fa-user-plus"></i> Add Customer
+    </button>
+  </div>
+</div>
+
+<!-- Customer Table -->
+<div class="card">
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Customer Name</th>
+          <th>Company</th>
+          <th>Contact Email</th>
+          <th>Phone</th>
+          <th>Lifetime Paid</th>
+          <th>Pending Due</th>
+          <th>Invoices</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="customers-tbody">
+        <tr>
+          <td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading customer directory...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: Add Customer
+     ========================================================================= -->
+<div class="modal-overlay" id="modal-customer">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">
+        <i class="fa-solid fa-user-plus" style="color:var(--primary);"></i>
+        <span>Add Business Customer</span>
+      </div>
+      <button class="modal-close-btn" id="modal-close-customer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="create-customer-form">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Full Name / Contact Person *</label>
+          <input type="text" id="cust-name" class="form-control" placeholder="e.g. Elena Rostova" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Company / Organization</label>
+          <input type="text" id="cust-company" class="form-control" placeholder="e.g. Zenith Media Agency">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" id="cust-email" class="form-control" placeholder="elena@company.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" id="cust-phone" class="form-control" placeholder="+1 (555) 000-0000">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Billing Address</label>
+          <textarea id="cust-address" class="form-control" rows="2" placeholder="Suite, Street, City, State, ZIP"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btn-cancel-customer">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="btn-save-customer">
+          <i class="fa-solid fa-check"></i> Save Customer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/customers.js"></script>
+{% endblock %}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayPilot AI – Sign In / Hackathon Demo Portal</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 30%, #ffffff 80%);
+    }
+    [data-theme="dark"] .auth-page {
+      background: linear-gradient(135deg, #0b0f19 0%, #0f172a 60%, #111827 100%);
+    }
+    .auth-banner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 60px;
+      background: linear-gradient(135deg, #0284c7 0%, #0070ba 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .auth-banner::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      bottom: -100px;
+      right: -100px;
+      pointer-events: none;
+    }
+    .auth-form-container {
+      width: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 50px 60px;
+      background: var(--bg-card);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.04);
+    }
+    .demo-callout-card {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+    [data-theme="dark"] .demo-callout-card {
+      background: rgba(2, 132, 199, 0.12);
+      border-color: rgba(2, 132, 199, 0.3);
+    }
+    @media (max-width: 900px) {
+      .auth-banner { display: none; }
+      .auth-form-container { width: 100%; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-page">
+    <!-- Left Hero Banner -->
+    <div class="auth-banner">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:44px; height:44px; background:rgba(255,255,255,0.2); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <span style="font-size:1.5rem; font-weight:800; letter-spacing:-0.02em;">PayPilot AI</span>
+      </div>
+
+      <div style="max-width:480px; margin: 40px 0;">
+        <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; background:rgba(255,255,255,0.18); border-radius:9999px; font-size:0.8rem; font-weight:700; margin-bottom:18px;">
+          <i class="fa-brands fa-paypal"></i> PayPal Sandbox & Gemini LLM Powered
+        </div>
+        <h1 style="font-size:2.6rem; font-weight:800; line-height:1.15; margin-bottom:16px;">
+          Intelligent FinTech & Automated Payment Operations
+        </h1>
+        <p style="font-size:1.05rem; opacity:0.92; line-height:1.6;">
+          Generate AI-structured invoices, reconcile real-time PayPal sandbox payments, detect cash flow anomalies, and recover overdue receivables with autonomous reminders.
+        </p>
+
+        <div style="margin-top:32px; display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:0.95rem;">
+            <i class="fa-solid fa-circle-check" style="color:#6ee7b7;"></i>
+            <span>Real PayPal Sandbox API Order & Capture Verification</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:0.95rem;">
+            <i class="fa-solid fa-circle-check" style="color:#6ee7b7;"></i>
+            <span>Google Gemini Conversational Financial Assistant</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:0.95rem;">
+            <i class="fa-solid fa-circle-check" style="color:#6ee7b7;"></i>
+            <span>Instant PDF Invoicing & Automated Client Pay Links</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:0.82rem; opacity:0.8;">
+        © 2026 PayPilot AI Technologies Inc. • Enterprise Grade FinTech Architecture
+      </div>
+    </div>
+
+    <!-- Right Login / Demo Form -->
+    <div class="auth-form-container">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-weight:800; font-size:1.25rem; color:var(--text-main);">Welcome Back</span>
+        </div>
+        <button class="theme-toggle-btn" title="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+
+      <!-- Hackathon 1-Click Demo Access Box -->
+      <div class="demo-callout-card">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary); font-size:1.1rem;"></i>
+          <span style="font-weight:700; font-size:0.95rem; color:var(--text-main);">Hackathon Quick Evaluation Mode</span>
+        </div>
+        <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.45; margin-bottom:14px;">
+          Skip manual registration to evaluate the live FinTech dashboard with pre-populated transactions, PayPal sandbox records, and financial metrics.
+        </p>
+        <button id="btn-demo-login" class="btn btn-primary" style="width:100%; font-weight:700; justify-content:center;">
+          <i class="fa-solid fa-rocket"></i> Launch 1-Click Demo Mode (Alex Morgan)
+        </button>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px; margin: 10px 0 20px 0;">
+        <div style="flex:1; height:1px; background:var(--border-color);"></div>
+        <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-subtle); font-weight:700;">Or Standard Sign In</span>
+        <div style="flex:1; height:1px; background:var(--border-color);"></div>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Work Email</label>
+          <input type="email" id="email" class="form-control" placeholder="name@company.com" value="alex.morgan@apexdigital.io" required>
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label class="form-label" style="margin-bottom:0;">Password</label>
+            <a href="#" style="font-size:0.78rem;">Forgot password?</a>
+          </div>
+          <input type="password" id="password" class="form-control" placeholder="••••••••••••" value="demo12345" required>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+          <input type="checkbox" id="remember" checked style="cursor:pointer;">
+          <label for="remember" style="font-size:0.84rem; color:var(--text-muted); cursor:pointer;">Keep me signed in on this device</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
+          <i class="fa-solid fa-lock"></i> Access PayPilot Dashboard
+        </button>
+      </form>
+
+      <div style="margin-top:24px; text-align:center; font-size:0.84rem; color:var(--text-muted);">
+        Don't have an account? <a href="#" id="link-create-account" style="font-weight:600;">Create Business Account</a>
+      </div>
+      
+      <div style="margin-top:20px; padding:12px; border-radius:var(--radius-sm); background:var(--bg-tertiary); font-size:0.75rem; color:var(--text-subtle); text-align:center;">
+        <i class="fa-solid fa-shield-halved"></i> Authoritative database backend with PayPal OAuth2 Sandbox verification.
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    document.getElementById('btn-demo-login').addEventListener('click', async () => {
+      const btn = document.getElementById('btn-demo-login');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Initializing Demo Workspace...';
+      try {
+        const res = await fetch('/api/auth/demo-login', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          PayPilot.showToast('Demo environment activated. Welcome Alex!', 'success');
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 400);
+        }
+      } catch (err) {
+        PayPilot.showToast('Login error: ' + err.message, 'error');
+        btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Launch 1-Click Demo Mode';
+      }
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        PayPilot.showToast('Signed in successfully', 'success');
+        setTimeout(() => window.location.href = '/dashboard', 300);
+      }
+    });
+
+    document.getElementById('link-create-account').addEventListener('click', (e) => {
+      e.preventDefault();
+      PayPilot.showToast('Registration is auto-enabled for hackathon demo. Use 1-Click login or any email!', 'info');
+    });
+  </script>
+</body>
+</html>

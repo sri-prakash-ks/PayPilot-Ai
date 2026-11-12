@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices & AI Generator – PayPilot AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Invoice Management</h1>
+    <p class="page-subtitle">Create AI-itemized invoices, track payment status, download PDFs, and dispatch PayPal payment links.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" id="btn-open-ai-prompt">
+      <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary);"></i> AI Item Generator
+    </button>
+    <button class="btn btn-primary" id="btn-new-invoice">
+      <i class="fa-solid fa-plus"></i> Create Invoice
+    </button>
+  </div>
+</div>
+
+<!-- Filter & Search Toolbar -->
+<div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <!-- Filter Status Tabs -->
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-sm btn-primary filter-tab active" data-status="all">All Invoices</button>
+      <button class="btn btn-sm btn-outline filter-tab" data-status="paid">
+        <i class="fa-solid fa-circle-check" style="color:var(--success);"></i> Paid
+      </button>
+      <button class="btn btn-sm btn-outline filter-tab" data-status="pending">
+        <i class="fa-regular fa-clock" style="color:var(--warning);"></i> Pending
+      </button>
+      <button class="btn btn-sm btn-outline filter-tab" data-status="overdue">
+        <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);"></i> Overdue
+      </button>
+      <button class="btn btn-sm btn-outline filter-tab" data-status="cancelled">Cancelled</button>
+    </div>
+
+    <!-- Search Invoices -->
+    <div style="position:relative; width: 280px;">
+      <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-subtle);"></i>
+      <input type="text" id="invoice-search-input" class="form-control" style="padding-left:36px; border-radius:var(--radius-full); font-size:0.85rem;" placeholder="Filter by invoice # or client...">
+    </div>
+  </div>
+</div>
+
+<!-- Invoices Table -->
+<div class="card">
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Invoice #</th>
+          <th>Customer</th>
+          <th>Issue Date</th>
+          <th>Due Date</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Payment Link</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="invoices-tbody">
+        <tr>
+          <td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading invoices...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: Create New Invoice (with AI Generator integration)
+     ========================================================================= -->
+<div class="modal-overlay" id="modal-invoice">
+  <div class="modal-card modal-card-lg">
+    <div class="modal-header">
+      <div class="modal-title">
+        <i class="fa-solid fa-file-invoice-dollar" style="color:var(--primary);"></i>
+        <span>Create New FinTech Invoice</span>
+      </div>
+      <button class="modal-close-btn" id="modal-close-invoice">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="create-invoice-form">
+      <div class="modal-body">
+        <!-- AI Smart Auto-Fill Assistant Box -->
+        <div style="background:var(--primary-light); border:1px solid rgba(2, 132, 199, 0.3); border-radius:var(--radius-md); padding:16px; margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="font-weight:700; font-size:0.88rem; color:var(--primary); display:flex; align-items:center; gap:8px;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Invoice Line Item & Description Generator
+            </div>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Gemini LLM</span>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="ai-invoice-prompt" class="form-control" style="font-size:0.86rem; background:var(--bg-card);" placeholder="e.g. Full-stack marketplace app, 2 payment gateway integrations, 3 revision rounds...">
+            <button type="button" class="btn btn-primary btn-sm" id="btn-run-ai-generator" style="white-space:nowrap;">
+              <i class="fa-solid fa-bolt"></i> Generate Items
+            </button>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+            Describe the deliverables in plain English and PayPilot AI will automatically synthesize structured items, quantities, and realistic pricing.
+          </div>
+        </div>
+
+        <!-- Customer Selection / Entry -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Client / Customer Name *</label>
+            <input type="text" id="inv-customer-name" class="form-control" placeholder="e.g. Acme Corp" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Client Email Address *</label>
+            <input type="email" id="inv-customer-email" class="form-control" placeholder="billing@acme.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Due Date *</label>
+            <input type="date" id="inv-due-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tax Rate (%)</label>
+            <input type="number" id="inv-tax-rate" class="form-control" step="0.1" value="8.5">
+          </div>
+        </div>
+
+        <!-- Line Items Section -->
+        <div style="margin-top: 14px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;">
+          <label class="form-label" style="font-weight:700; margin-bottom:0;">Line Items & Deliverables *</label>
+          <button type="button" class="btn btn-sm btn-outline" id="btn-add-item">
+            <i class="fa-solid fa-plus"></i> Add Line Item
+          </button>
+        </div>
+
+        <div id="items-container" style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+          <!-- Item Row Template inserted by JS -->
+        </div>
+
+        <!-- Totals Calculation Card -->
+        <div style="background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:16px; margin-top:16px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:6px;">
+            <span style="color:var(--text-muted);">Subtotal:</span>
+            <span id="calc-subtotal" style="font-weight:600;">$0.00</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:6px;">
+            <span style="color:var(--text-muted);">Estimated Tax:</span>
+            <span id="calc-tax" style="font-weight:600;">$0.00</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:1.15rem; font-weight:800; border-top:1px solid var(--border-color); padding-top:8px;">
+            <span>Total Amount Due:</span>
+            <span id="calc-total" style="color:var(--primary);">$0.00</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:18px;">
+          <label class="form-label">Payment Terms & Notes</label>
+          <textarea id="inv-notes" class="form-control" rows="2" placeholder="e.g. Net 14. Secure checkout available through PayPal Sandbox."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btn-cancel-invoice">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="btn-save-invoice">
+          <i class="fa-solid fa-check"></i> Generate & Save Invoice
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: Invoice Preview, PDF & PayPal Payment Link
+     ========================================================================= -->
+<div class="modal-overlay" id="modal-invoice-preview">
+  <div class="modal-card modal-card-lg">
+    <div class="modal-header">
+      <div class="modal-title" id="preview-modal-title">
+        <i class="fa-solid fa-file-invoice" style="color:var(--primary);"></i>
+        <span>Invoice Details</span>
+      </div>
+      <button class="modal-close-btn" id="modal-close-preview">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" id="preview-modal-content">
+      <div style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+    </div>
+
+    <div class="modal-footer" id="preview-modal-footer">
+      <!-- Buttons dynamically populated -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/invoices.js"></script>
+{% endblock %}

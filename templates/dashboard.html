@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard – PayPilot AI FinTech Platform{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Financial Overview</h1>
+    <p class="page-subtitle">Real-time revenue, PayPal sandbox settlements, and predictive cash flow metrics.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="window.location.href='/analytics'">
+      <i class="fa-solid fa-chart-line"></i> Cash Flow Audit
+    </button>
+    <button class="btn btn-primary" onclick="window.location.href='/invoices?create=true'">
+      <i class="fa-solid fa-plus"></i> New AI Invoice
+    </button>
+  </div>
+</div>
+
+<!-- 4 Core Financial Metrics Cards -->
+<div class="metrics-grid">
+  <!-- Total Revenue -->
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Total Revenue</span>
+      <div class="metric-icon-wrap icon-blue">
+        <i class="fa-solid fa-dollar-sign"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="stat-total-revenue">$0.00</div>
+    <div class="metric-change up">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      <span>+24.8% vs last month</span>
+    </div>
+  </div>
+
+  <!-- Total Payments Received -->
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Payments Received</span>
+      <div class="metric-icon-wrap icon-green">
+        <i class="fa-brands fa-paypal"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="stat-payments-received">$0.00</div>
+    <div class="metric-change up">
+      <i class="fa-solid fa-circle-check"></i>
+      <span id="stat-payments-count">0 settled orders</span>
+    </div>
+  </div>
+
+  <!-- Pending Payments -->
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Pending Invoices</span>
+      <div class="metric-icon-wrap icon-amber">
+        <i class="fa-regular fa-clock"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="stat-pending-amount" style="color:#b45309;">$0.00</div>
+    <div class="metric-change neutral">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span id="stat-pending-count">0 awaiting settlement</span>
+    </div>
+  </div>
+
+  <!-- Total Transactions -->
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Transactions</span>
+      <div class="metric-icon-wrap icon-indigo">
+        <i class="fa-solid fa-receipt"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="stat-total-txns">0</div>
+    <div class="metric-change up">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>100% Sandbox Verified</span>
+    </div>
+  </div>
+</div>
+
+<!-- Main Row: Chart & AI Insights -->
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:28px;">
+  <!-- Chart Card -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Monthly Revenue & Cash Inflow</h2>
+        <p class="card-subtitle">Verified PayPal Sandbox receipts vs Operating Expenses (Past 6 Months)</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="badge badge-completed">
+          <i class="fa-solid fa-circle"></i> Revenue
+        </span>
+        <span class="badge" style="background:var(--bg-tertiary); color:var(--text-muted);">
+          <i class="fa-solid fa-circle"></i> Expenses
+        </span>
+      </div>
+    </div>
+    <div style="height: 310px; position:relative;">
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+
+  <!-- AI Financial Insights Card -->
+  <div class="card" style="display:flex; flex-direction:column;">
+    <div class="card-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary);"></i>
+        <h2 class="card-title">AI Financial Insights</h2>
+      </div>
+      <button class="btn btn-sm btn-outline" onclick="window.location.href='/assistant'">
+        Ask AI
+      </button>
+    </div>
+
+    <div id="ai-insights-container" style="flex:1; display:flex; flex-direction:column; gap:12px;">
+      <div style="text-align:center; padding:30px; color:var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin"></i> Generating real-time financial insights...
+      </div>
+    </div>
+
+    <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:0.75rem; color:var(--text-subtle);">Powered by Gemini AI Engine</span>
+      <a href="/analytics" style="font-size:0.78rem; font-weight:700;">Deep Cash Flow Audit →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Transactions Table & Quick Actions -->
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h2 class="card-title">Recent Transactions</h2>
+      <p class="card-subtitle">Latest PayPal Sandbox transactions with authoritative backend verification</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <a href="/transactions" class="btn btn-sm btn-outline">View All Transactions</a>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Customer</th>
+          <th>Invoice Ref</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Payment Method</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="recent-transactions-tbody">
+        <tr>
+          <td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading transaction history...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

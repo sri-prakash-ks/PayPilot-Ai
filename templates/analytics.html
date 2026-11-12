@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}AI Cash Flow Analyst – PayPilot AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">AI Cash Flow Analyst</h1>
+    <p class="page-subtitle">Algorithmic profit & loss summaries, spending anomaly detection, and cash runway projections.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" id="btn-export-report">
+      <i class="fa-solid fa-file-pdf"></i> Export Executive Report
+    </button>
+    <button class="btn btn-primary" id="btn-refresh-audit">
+      <i class="fa-solid fa-arrows-rotate"></i> Re-Run AI Audit
+    </button>
+  </div>
+</div>
+
+<!-- Top Summary Cards -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Net Operating Profit</span>
+      <div class="metric-icon-wrap icon-green">
+        <i class="fa-solid fa-scale-balanced"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="cf-net-profit" style="color:var(--success);">$0.00</div>
+    <div class="metric-change up" id="cf-profit-margin">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Profit Margin: 0%</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Monthly Burn Rate</span>
+      <div class="metric-icon-wrap icon-amber">
+        <i class="fa-solid fa-fire"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="cf-burn-rate">$3,820.00</div>
+    <div class="metric-change neutral">
+      <i class="fa-solid fa-arrows-turn-to-dots"></i>
+      <span>Stable across 90 days</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Cash Runway</span>
+      <div class="metric-icon-wrap icon-blue">
+        <i class="fa-solid fa-calendar-check"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="cf-runway">14.8 Mo</div>
+    <div class="metric-change up">
+      <i class="fa-solid fa-shield-heart"></i>
+      <span>Low financial distress risk</span>
+    </div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-top">
+      <span class="metric-label">Overdue Cash Locked</span>
+      <div class="metric-icon-wrap icon-indigo">
+        <i class="fa-solid fa-unlock-keyhole"></i>
+      </div>
+    </div>
+    <div class="metric-value" id="cf-locked-cash" style="color:var(--danger);">$0.00</div>
+    <div class="metric-change down">
+      <a href="/reminders" style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:4px;">
+        <i class="fa-solid fa-arrow-right"></i> Recover via Reminders
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row: Income vs Expenses & Expense Category Breakdown -->
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-bottom:28px;">
+  <!-- Trend Chart -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Profit & Loss Trajectory</h2>
+        <p class="card-subtitle">Verified PayPal Inflows vs Outflows (USD)</p>
+      </div>
+      <div style="font-size:0.75rem; color:var(--text-subtle);">
+        <i class="fa-solid fa-check"></i> Verified Server Data
+      </div>
+    </div>
+    <div style="height: 300px; position:relative;">
+      <canvas id="cashflowTrendChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Expenses by Category Donut -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Expense Allocation</h2>
+        <p class="card-subtitle">Cost drivers breakdown</p>
+      </div>
+    </div>
+    <div style="height: 240px; position:relative; margin-bottom:12px;">
+      <canvas id="expenseDonutChart"></canvas>
+    </div>
+    <div id="expense-legend" style="font-size:0.8rem; display:flex; flex-direction:column; gap:4px;"></div>
+  </div>
+</div>
+
+<!-- AI Spending Anomalies & Strategic Recommendations -->
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:28px;">
+  <!-- AI Spending Anomaly Detector -->
+  <div class="card">
+    <div class="card-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i>
+        <div>
+          <h2 class="card-title">AI Spending & Anomaly Detector</h2>
+          <p class="card-subtitle">Automated pattern recognition across outlays</p>
+        </div>
+      </div>
+      <span class="badge" style="background:var(--warning-light); color:#b45309; font-size:0.72rem;">
+        Automated Audit
+      </span>
+    </div>
+
+    <div id="anomalies-container" style="display:flex; flex-direction:column; gap:12px;">
+      <div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Analyzing transactions...</div>
+    </div>
+  </div>
+
+  <!-- AI Strategic Cash Flow Recommendations -->
+  <div class="card">
+    <div class="card-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-lightbulb" style="color:var(--primary);"></i>
+        <div>
+          <h2 class="card-title">AI Growth & Liquidity Strategies</h2>
+          <p class="card-subtitle">Predictive models to improve capital turn</p>
+        </div>
+      </div>
+      <span class="badge" style="background:var(--primary-light); color:var(--primary); font-size:0.72rem;">
+        Gemini AI Powered
+      </span>
+    </div>
+
+    <div id="recommendations-container" style="display:flex; flex-direction:column; gap:12px;">
+      <div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Generating recommendations...</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/analytics.js"></script>
+{% endblock %}

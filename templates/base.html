@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PayPilot AI – Intelligent FinTech & Invoicing Platform{% endblock %}</title>
+  
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Core PayPilot Design System -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard" class="brand-logo">
+          <div class="brand-icon">
+            <i class="fa-solid fa-bolt-lightning"></i>
+          </div>
+          <span>PayPilot <span class="brand-badge">AI</span></span>
+        </a>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Core Banking & Ops</div>
+        <a href="/dashboard" class="nav-link" id="nav-dashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="/invoices" class="nav-link" id="nav-invoices">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Invoices</span>
+        </a>
+        <a href="/transactions" class="nav-link" id="nav-transactions">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Transactions</span>
+        </a>
+
+        <div class="nav-section-title">AI Financial Suite</div>
+        <a href="/assistant" class="nav-link" id="nav-assistant">
+          <i class="fa-solid fa-robot"></i>
+          <span>AI Assistant</span>
+        </a>
+        <a href="/analytics" class="nav-link" id="nav-analytics">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          <span>Cash Flow Analyst</span>
+        </a>
+        <a href="/reminders" class="nav-link" id="nav-reminders">
+          <i class="fa-solid fa-bell"></i>
+          <span>Smart Reminders</span>
+          <span class="nav-badge" id="overdue-badge-count">2</span>
+        </a>
+
+        <div class="nav-section-title">Business Directory</div>
+        <a href="/customers" class="nav-link" id="nav-customers">
+          <i class="fa-solid fa-users"></i>
+          <span>Customers</span>
+        </a>
+        <a href="/settings" class="nav-link" id="nav-settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Theme</span>
+        </div>
+        <a href="/api/auth/logout" class="theme-toggle-btn" title="Sign Out" style="color:var(--danger);">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Navigation Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" aria-label="Toggle Sidebar Menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search invoices, clients, transactions... (Press Enter)">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- PayPal Sandbox Mode Indicator -->
+          <div class="paypal-status-badge" title="Connected to PayPal Developer Sandbox Environment">
+            <span class="pulse-dot"></span>
+            <i class="fa-brands fa-paypal"></i>
+            <span>PayPal Sandbox Active</span>
+          </div>
+
+          <!-- Notification Button -->
+          <button class="action-icon-btn" onclick="window.location.href='/reminders'" title="Outstanding Payment Alerts">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notification-count">2</span>
+          </button>
+
+          <!-- User Profile & Organization -->
+          <div class="user-profile-btn" onclick="window.location.href='/settings'">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="user-avatar">
+            <div class="user-info">
+              <div class="user-name">Alex Morgan</div>
+              <div class="user-role">Apex Digital Labs</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Body Container -->
+      <main class="page-content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- Global Toast Notification Container -->
+  <div class="toast-container"></div>
+
+  <!-- Global Scripts -->
+  <script src="/static/js/app.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

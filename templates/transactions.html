@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Payment Tracker – PayPilot AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Smart Payment Tracker</h1>
+    <p class="page-subtitle">Inspect cryptographically verified PayPal Sandbox payments, fee structures, and settlement logs.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" id="btn-export-csv">
+      <i class="fa-solid fa-file-arrow-down"></i> Export CSV
+    </button>
+    <a href="/invoices" class="btn btn-primary">
+      <i class="fa-solid fa-file-invoice"></i> Manage Invoices
+    </a>
+  </div>
+</div>
+
+<!-- Filters & Search Toolbar -->
+<div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <!-- Status Filter Buttons -->
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn btn-sm btn-primary txn-filter-tab active" data-status="ALL">All Payments</button>
+      <button class="btn btn-sm btn-outline txn-filter-tab" data-status="COMPLETED">
+        <i class="fa-solid fa-circle-check" style="color:var(--success);"></i> Completed
+      </button>
+      <button class="btn btn-sm btn-outline txn-filter-tab" data-status="PENDING">
+        <i class="fa-regular fa-clock" style="color:var(--warning);"></i> Pending
+      </button>
+      <button class="btn btn-sm btn-outline txn-filter-tab" data-status="FAILED">
+        <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);"></i> Failed
+      </button>
+    </div>
+
+    <!-- Search Transactions -->
+    <div style="position:relative; width: 300px;">
+      <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-subtle);"></i>
+      <input type="text" id="txn-search-input" class="form-control" style="padding-left:36px; border-radius:var(--radius-full); font-size:0.85rem;" placeholder="Search TXN ID, client, capture ID...">
+    </div>
+  </div>
+</div>
+
+<!-- Transactions Table -->
+<div class="card">
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Customer</th>
+          <th>Invoice Ref</th>
+          <th>Gross Amount</th>
+          <th>PayPal Fee</th>
+          <th>Net Payout</th>
+          <th>Status</th>
+          <th>Date & Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="transactions-tbody">
+        <tr>
+          <td colspan="9" style="text-align:center; padding:32px; color:var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading transactions...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: Transaction PayPal Verification Details
+     ========================================================================= -->
+<div class="modal-overlay" id="modal-txn-detail">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">
+        <i class="fa-brands fa-paypal" style="color:#0070ba;"></i>
+        <span>PayPal Sandbox Settlement Verification</span>
+      </div>
+      <button class="modal-close-btn" id="modal-close-txn">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" id="txn-modal-body">
+      <div style="text-align:center; padding:30px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" onclick="document.getElementById('modal-txn-detail').classList.remove('active')">
+        Close Window
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/payments.js"></script>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}PayPilot Assistant – FinTech AI Chatbot{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">AI Financial Assistant</h1>
+    <p class="page-subtitle">Ask questions about verified revenue, pending invoices, cash flow velocity, and smart business growth.</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" id="btn-clear-chat">
+      <i class="fa-solid fa-trash-can"></i> Clear Chat
+    </button>
+    <a href="/settings" class="btn btn-primary">
+      <i class="fa-solid fa-sliders"></i> AI Model Settings
+    </a>
+  </div>
+</div>
+
+<div class="chat-container">
+  <!-- Chat Top Bar -->
+  <div class="chat-header">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="chat-avatar ai">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div>
+        <div style="font-weight:700; font-size:0.95rem; color:var(--text-main);">PayPilot Assistant</div>
+        <div style="font-size:0.75rem; color:var(--success); display:flex; align-items:center; gap:5px;">
+          <span style="width:7px; height:7px; background:var(--success); border-radius:50%; display:inline-block;"></span>
+          <span id="ai-engine-status">Gemini AI Engine Connected</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span class="badge" style="background:var(--primary-light); color:var(--primary); font-size:0.75rem;">
+        <i class="fa-solid fa-database"></i> Live Database Context Synced
+      </span>
+    </div>
+  </div>
+
+  <!-- Messages Scroll Area -->
+  <div class="chat-messages" id="chat-messages-area">
+    <!-- Initial Greeting -->
+    <div class="chat-bubble-wrap ai">
+      <div class="chat-avatar ai">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div>
+        <div class="chat-bubble">
+          Hello Alex! I am your <b>PayPilot Assistant</b>. I analyze your real PayPal sandbox transactions, pending invoices, and monthly expenses.
+          <br><br>
+          You can ask me questions like:
+          <ul style="margin: 8px 0 0 18px; padding: 0;">
+            <li>How much revenue did I generate this month?</li>
+            <li>Which invoices are still pending?</li>
+            <li>What are my total expenses?</li>
+            <li>How can I improve my cash flow?</li>
+            <li>Give me a summary of my business performance.</li>
+          </ul>
+        </div>
+        <span class="chat-timestamp">Just now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Predefined Quick Prompt Chips -->
+  <div class="prompt-chips-wrap">
+    <div class="prompt-chip" data-prompt="How much revenue did I generate this month?">
+      📈 Monthly Revenue
+    </div>
+    <div class="prompt-chip" data-prompt="Which invoices are still pending?">
+      📋 Pending & Overdue Invoices
+    </div>
+    <div class="prompt-chip" data-prompt="What are my total expenses?">
+      💳 Business Expenses
+    </div>
+    <div class="prompt-chip" data-prompt="How can I improve my cash flow?">
+      🚀 Improve Cash Flow
+    </div>
+    <div class="prompt-chip" data-prompt="Give me a summary of my business performance.">
+      📊 Full Performance Summary
+    </div>
+  </div>
+
+  <!-- Input Bar -->
+  <form id="chat-form" class="chat-input-bar">
+    <input type="text" id="chat-input" class="chat-input" placeholder="Ask PayPilot Assistant anything about your finances..." autocomplete="off" required>
+    <button type="submit" class="btn btn-primary" id="btn-send-chat" style="border-radius:var(--radius-full); padding:10px 22px;">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/assistant.js"></script>
+{% endblock %}
